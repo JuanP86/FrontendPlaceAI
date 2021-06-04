@@ -1,8 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import bootstrap from "bootstrap"
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import { useTable } from 'react-table';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -11,7 +16,136 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+export default function App() {
+  return (
+    <Router>
+      <body>
+        <div>
+          <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+              <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon"></span>
+              </button>
+              <Link className="navbar-brand" to="/">Home</Link>
+              <div className="collapse navbar-collapse" id="navbarToggler">
+                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li className="nav-item">
+                    <Link to="/inspeccionar" className="nav-link">About</Link>
+                  </li>
+                  <li></li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+          <Switch>
+            <Route path="/inspeccionar">
+              <Inspeccionar />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </div>
+      </body>
+    </Router>
+  );
+}
+
+function Home() {
+  return (
+    <div id="Home-Div" className="container-fluid">
+      <h2>Bienvenido a PlaceAI</h2>
+      <p>Esta es la pagina de entrada</p>
+    </div>
+  );
+}
+
+function Inspeccionar() {
+  const data = React.useMemo(
+    () => [
+      {
+        col1: "Magic Kingdom",
+        col2: "40 minutos",
+      },
+      {
+        col1: "Universal Studios",
+        col2: "20 minutos",
+      },
+      {
+        col1: "SeaWorld",
+        col2: "30 minutos",
+      }
+    ], []
+  );
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "Column 1",
+        accessor: "col1",
+      },
+      {
+        Header: "Column 2",
+        accessor: "col2",
+      }
+    ], []
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({ columns, data })
+
+  return (
+    <div className="container-fluid" id="Inspeccionar-Div">
+    <table {...getTableProps()} style={{ border: 'solid 1px white' }}>
+      <thead>
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              <th
+                {...column.getHeaderProps()}
+                style={{
+                  borderBottom: 'solid 3px gray',
+                  background: 'black',
+                  color: 'white',
+                  fontWeight: 'bold',
+                }}
+              >
+                {column.render('Header')}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {rows.map(row => {
+          prepareRow(row)
+          return (
+            <tr {...row.getRowProps()}>
+              {row.cells.map(cell => {
+                return (
+                  <td
+                    {...cell.getCellProps()}
+                    style={{
+                      padding: '10px',
+                      border: 'solid 1px gray',
+                      background: 'black',
+                      color: "white",
+                    }}
+                  >
+                    {cell.render('Cell')}
+                  </td>
+                )
+              })}
+            </tr>
+          )
+        })}
+      </tbody>
+    </table>
+    </div>
+  );
+}

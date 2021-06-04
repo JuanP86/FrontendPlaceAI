@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+
+body{
+    background-color:black;
+    font-family: 'Abel';
+}
+
+#Home-Div{
+    color:white;
+    padding-top: 20px;
+    padding-left: 30px;
+}
+
+#Inspeccionar-Div{
+    padding-top: 30px;
+    padding-left: 30px;
+}
