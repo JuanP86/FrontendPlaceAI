@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import bootstrap from "bootstrap"
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link
 } from "react-router-dom";
-import { useTable, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
+import { useTable, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table';
 import predictions from "./Predictions.json";
-import { Chart } from "react-charts";
+import CanvasJSReact from './canvasjs.react';
+var CanvasJS = CanvasJSReact.CanvasJS;
+var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 ReactDOM.render(
   <React.StrictMode>
     <App />
@@ -61,41 +62,16 @@ function Home() {
   );
 }
 
-function Grafico() {
-  const data = React.useMemo(
-    () => [
-      {
-        label: 'Series 1',
-        data: [
-          { primary: 1, secondary: 15 },
-          { primary: 2, secondary: 1 },
-          { primary: 3, secondary: predictions.times.MK[0] },
-        ],
-      },
-    ],
-    []
-  )
-  const axes = React.useMemo(
-    () => [
-      { primary: true, type: 'linear', position: 'bottom' },
-      { type: 'linear', position: 'left' },
-    ],
-    []
-  )
-
+function Inspeccionar() {
   return (
-    <div
-      style={{
-        width: '400px',
-        height: '300px',
-      }}
-    >
-      <Chart data={data} axes={axes} />
-    </div>
-  )
+    <div>
+      <Grafico />
+      <Tabla />
+    </div >
+  );
 }
 
-function Inspeccionar() {
+function Tabla() {
   const data = React.useMemo(
     () => [
       {
@@ -178,9 +154,32 @@ function Inspeccionar() {
           })}
         </tbody>
       </table>
-      <Route>
-        <Grafico />
-      </Route>
+    </div>
+  );
+}
+
+function Grafico() {
+  let dataPoints = [];
+  const options = {
+    theme: "dark2",
+    title: {
+      text: "Tiempos de Espera estos Días"
+    },
+    axisY: {
+      suffix: "minutos"
+    },
+    data: [{
+      type: "line",
+      xValueFormatString: "DD",
+      dataPoints: dataPoints
+    }]
+  }
+  return (
+    <div>
+      <CanvasJSChart options={options}
+        onRef={ref => this.chart = ref}
+      />
+      {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
     </div>
   );
 }
