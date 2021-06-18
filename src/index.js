@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import bootstrap from "bootstrap"
 import {
@@ -8,6 +8,8 @@ import {
   Link
 } from "react-router-dom";
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table'
+import predictions from "./Predictions.json";
+import { Chart } from "react-charts";
 ReactDOM.render(
   <React.StrictMode>
     <App />
@@ -59,52 +61,50 @@ function Home() {
   );
 }
 
+function Grafico() {
+  const data = React.useMemo(
+    () => [
+      {
+        label: 'Series 1',
+        data: [
+          { primary: 1, secondary: 15 },
+          { primary: 2, secondary: 1 },
+          { primary: 3, secondary: predictions.times.MK[0] },
+        ],
+      },
+    ],
+    []
+  )
+  const axes = React.useMemo(
+    () => [
+      { primary: true, type: 'linear', position: 'bottom' },
+      { type: 'linear', position: 'left' },
+    ],
+    []
+  )
+
+  return (
+    <div
+      style={{
+        width: '400px',
+        height: '300px',
+      }}
+    >
+      <Chart data={data} axes={axes} />
+    </div>
+  )
+}
+
 function Inspeccionar() {
   const data = React.useMemo(
     () => [
       {
-        col1: "E.T Adventure",
-        col2: "40 minutos",
+        col1: predictions.games.MK[0],
+        col2: predictions.times.MK[0] + " minutos",
       },
       {
         col1: "Hollywood Rip Ride Rockit",
         col2: "20 minutos",
-      },
-      {
-        col1: "Kang & Kodos' Twirl 'n' Hurl",
-        col2: "30 minutos",
-      },
-      {
-        col1: "Revenge of the Mummy",
-        col2: "30 minutos",
-      },
-      {
-        col1: "Shrek 4-D",
-        col2: "30 minutos",
-      },
-      {
-        col1: "MEN IN BLACK™ Alien Attack™",
-        col2: "20 minutos",
-      },
-      {
-        col1: "Monsters, Inc. Laugh Floor",
-        col2: "5 minutos",
-      },
-      {
-        col1: "Walt Disney World Railroad - Frontierland",
-        col2: "10 minutos",
-      },
-      {
-        col1: "Walt Disney's Enchanted Tiki Room",
-        col2: "40 minutos",
-      },
-      {
-        col1: "Sorcerers of the Magic Kingdom",
-        col2: "15 minutos",
-      },
-      {
-        col1: "The Barnstormer",
-        col2: "25 minutos",
       },
     ], []
   );
@@ -178,6 +178,9 @@ function Inspeccionar() {
           })}
         </tbody>
       </table>
+      <Route>
+        <Grafico />
+      </Route>
     </div>
   );
 }
