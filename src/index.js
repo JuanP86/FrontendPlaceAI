@@ -8,9 +8,11 @@ import {
 } from "react-router-dom";
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table';
 import predictions from "./Predictions.json";
-import CanvasJSReact from './canvasjs.react';
+var CanvasJSReact = require('./canvasjs.react');
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+var Component = React.Component;
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
@@ -62,11 +64,38 @@ function Home() {
   );
 }
 
+class Grafico extends Component {	
+  render() {
+    const options = {
+      title: {
+        text: "Basic Column Chart in React"
+      },
+      data: [{				
+                type: "column",
+                dataPoints: [
+                    { label: "Apple",  y: 10  },
+                    { label: "Orange", y: 15  },
+                    { label: "Banana", y: 25  },
+                    { label: "Mango",  y: 30  },
+                    { label: "Grape",  y: 28  }
+                ]
+       }]
+   }
+		
+   return (
+      <div>
+        <CanvasJSChart options = {options}
+        />
+      </div>
+    );
+  }
+}
+
 function Inspeccionar() {
   return (
     <div>
-      <Grafico />
       <Tabla />
+      <Grafico />
     </div >
   );
 }
@@ -154,32 +183,6 @@ function Tabla() {
           })}
         </tbody>
       </table>
-    </div>
-  );
-}
-
-function Grafico() {
-  let dataPoints = [];
-  const options = {
-    theme: "dark2",
-    title: {
-      text: "Tiempos de Espera estos Días"
-    },
-    axisY: {
-      suffix: "minutos"
-    },
-    data: [{
-      type: "line",
-      xValueFormatString: "DD",
-      dataPoints: dataPoints
-    }]
-  }
-  return (
-    <div>
-      <CanvasJSChart options={options}
-        onRef={ref => this.chart = ref}
-      />
-      {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
     </div>
   );
 }
