@@ -7,11 +7,8 @@ import {
   Link
 } from "react-router-dom";
 import { useTable, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table';
+import { Line } from 'react-chartjs-2';
 import predictions from "./Predictions.json";
-var CanvasJSReact = require('./canvasjs.react');
-var CanvasJS = CanvasJSReact.CanvasJS;
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
-var Component = React.Component;
 
 ReactDOM.render(
   <React.StrictMode>
@@ -64,39 +61,45 @@ function Home() {
   );
 }
 
-class Grafico extends Component {	
-  render() {
-    const options = {
-      title: {
-        text: "Basic Column Chart in React"
-      },
-      data: [{				
-                type: "column",
-                dataPoints: [
-                    { label: "Apple",  y: 10  },
-                    { label: "Orange", y: 15  },
-                    { label: "Banana", y: 25  },
-                    { label: "Mango",  y: 30  },
-                    { label: "Grape",  y: 28  }
-                ]
-       }]
-   }
-		
-   return (
-      <div>
-        <CanvasJSChart options = {options}
-        />
-      </div>
-    );
-  }
-}
-
 function Inspeccionar() {
   return (
     <div>
       <Tabla />
       <Grafico />
     </div >
+  );
+}
+
+function Grafico() {
+  const data = {
+    labels: ['1', '2', '3', '4', '5', '6'],
+    datasets: [
+      {
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        fill: false,
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderColor: 'rgba(255, 99, 132, 0.2)',
+      },
+    ],
+  };
+
+  const options = {
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+    },
+  };
+
+  return (
+    <>
+      <Line data={data} options={options} />
+    </>
   );
 }
 
