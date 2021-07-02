@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import {
   BrowserRouter as Router,
@@ -6,105 +6,193 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import { useTable, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table';
+//import { useTable, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table';
 import { Line } from 'react-chartjs-2';
-import predictions from "./Predictions.json";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
-export default function App() {
-  return (
-    <Router>
-      <body>
-        <div>
+class App extends React.Component {
+  render() {
+    return (
+      <Router>
+        <header>
           <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
+            <div className="container-fluid">
               <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
               </button>
-              <Link className="navbar-brand" to="/">Home</Link>
+              <Link className="navbar-brand" to="/">Inicio</Link>
               <div className="collapse navbar-collapse" id="navbarToggler">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                   <li className="nav-item">
                     <Link to="/inspeccionar" className="nav-link">Inspeccionar</Link>
                   </li>
-                  <li></li>
                 </ul>
               </div>
             </div>
           </nav>
+        </header>
+        <main className="container text-white">
           <Switch>
             <Route path="/inspeccionar">
               <Inspeccionar />
             </Route>
             <Route path="/">
-              <Home />
+              <Inicio />
             </Route>
           </Switch>
+        </main>
+      </Router>
+    );
+  }
+}
+
+class Inicio extends React.Component {
+  constructor() {
+    super();
+    this.state = {};
+  }
+
+  componentDidMount() {
+    fetch("http://placeai-api.azurewebsites.net/index?key=ai")
+      .then(resp => resp.json())
+      .then(data => {
+        this.setState({ response: data.response })
+      });
+  }
+
+  render() {
+    return (
+      <>
+        <h2>PlaceAI</h2>
+        <ul>
+          {this.state.response && this.state.response.map((a, b) => {
+            return (<li key={a.id}>{a.id}: {a.name}</li>)
+          })}
+          {!this.state.response ? "Cargando..." : ""}
+        </ul>
+      </>
+    )
+  }
+}
+
+
+class Inspeccionar extends React.Component {
+  constructor() {
+    super();
+    this.state = {};
+  }
+  componentDidMount() {
+    fetch("http://placeai-api.azurewebsites.net/index?key=ai")
+      .then(resp => resp.json())
+      .then(data => {
+        this.setState({ parks: data.response })
+      })
+  }
+  cambioParque = () => {
+    fetch("http://placeai-api.azurewebsites.net/rides?key=ai&park="+document.getElementById("parqueSelec").value)
+      .then(resp => resp.json())
+      .then(data => {
+        this.setState({ rides: data.response })
+      })
+  }
+
+  render() {
+    return (
+      <div>
+        <div>
+          <input type="date" id="fechaSelec">
+          </input>
+          <select id="parqueSelec" onChange={this.cambioParque}>
+            <option defaultValue>Seleccione</option>
+            {!this.state.parks ? <option disabled defaultValue>Cargando...</option> : ""}
+            {this.state.parks && this.state.parks.map((a, b) => {
+              return (<option key={a.id} value={a.id}>{a.name}</option>)
+            })}
+          </select>
+          <select id="atracSelec" onChange={Grafico.cambioAtraccion}>
+            <option disabled defaultValue>Seleccione</option>
+            {this.state.rides && this.state.rides.map((a, b) => {
+              return (<option key={a.id} value={a.id}>{a.name}</option>)
+            })}
+        </select>
         </div>
-      </body>
-    </Router>
-  );
+        <Tabla />
+        <Grafico />
+      </div >
+    );
+  }
 }
 
-function Home() {
-  return (
-    <div id="Home-Div" className="container-fluid">
-      <h2>Bienvenido a PlaceAI</h2>
-      <p>Esta es la pagina de entrada</p>
-    </div>
-  );
-}
+class Grafico extends React.Component {
+  constructor() {
+    super();
+    this.state = {};
+  }
+  componentDidMount(){
+  }
 
-function Inspeccionar() {
-  return (
-    <div>
-      <Tabla />
-      <Grafico />
-    </div >
-  );
-}
+  cambioAtraccion(){
+    fetch("http://placeai-api.azurewebsites.net/waits/"+document.getElementById("atracSelec").value+"?key=ai")
+    .then(resp => resp.json())
+      .then(data => {
+        this.setState({ waits: data.response.intervals })
+      })
+  }
 
-function Grafico() {
-  const data = {
-    labels: ['1', '2', '3', '4', '5', '6'],
-    datasets: [
-      {
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        fill: false,
-        backgroundColor: 'rgb(255, 99, 132)',
-        borderColor: 'rgba(255, 99, 132, 0.2)',
-      },
-    ],
-  };
+  cambioFecha (){
+    fetch("http://placeai-api.azurewebsites.net/waits/"+document.getElementById("atracSelec").value+"?key=ai&time="+document.getElementById("fechaSelec").value)
+    .then(resp => resp.json())
+      .then(data => {
+        this.setState({ waits: data.response.intervals })
+      })
+  }
 
-  const options = {
-    scales: {
-      yAxes: [
+  render() {
+    let tiempos = [];
+    for (let i = 0; i < 23; i++) {
+      tiempos[i] = Math.floor(Math.random() * (120 - 0)) + 0;
+    }
+
+    let horas = [];
+    for (let i = 0; i < 16; i++) {
+      horas[i] = 8 + i;
+    }
+
+    const data = {
+      labels: horas,
+      datasets: [
         {
-          ticks: {
-            beginAtZero: true,
-          },
+          label: 'tiempos de espera de ese día',
+          data: tiempos,
+          fill: false,
+          backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgba(255, 99, 132, 0.2)',
         },
       ],
-    },
-  };
+    };
 
-  return (
-    <>
-      <Line data={data} options={options} />
-    </>
-  );
+    const options = {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+    };
+    return (
+      <>
+        <div className="container-sm">
+          <Line data={data} options={options} />
+        </div>
+      </>
+    );
+  }
 }
 
 function Tabla() {
-  const data = React.useMemo(
+  /*const data = React.useMemo(
     () => [
       {
         col1: predictions.games.MK[0],
@@ -187,5 +275,10 @@ function Tabla() {
         </tbody>
       </table>
     </div>
-  );
+  );*/
+  return (<div></div>);
 }
+
+ReactDOM.render(<App />,
+  document.getElementById('root')
+);
