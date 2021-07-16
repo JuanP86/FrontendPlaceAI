@@ -8,39 +8,55 @@ import {
 } from "react-router-dom";
 //import { useTable, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table';
 import { Line } from 'react-chartjs-2';
+import algo from './fetcheadisimolince.json';
 
 class App extends React.Component {
   render() {
     return (
       <Router>
-        <header>
-          <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div className="container-fluid">
-              <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-              </button>
-              <Link className="navbar-brand" to="/">Inicio</Link>
-              <div className="collapse navbar-collapse" id="navbarToggler">
-                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li className="nav-item">
-                    <Link to="/inspeccionar" className="nav-link">Inspeccionar</Link>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>
-        </header>
-        <main className="container text-white">
-          <Switch>
-            <Route path="/inspeccionar">
-              <Inspeccionar />
-            </Route>
-            <Route path="/">
-              <Inicio />
-            </Route>
-          </Switch>
-        </main>
+        <div className="d-flex h-100">
+          <ControlSidebar />
+          <div className="h-100 w-100">
+            <header>
+              <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div className="container-fluid">
+                  <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
+                    <span className="navbar-toggler-icon"></span>
+                  </button>
+                  <Link className="navbar-brand" to="/">PlaceAI</Link>
+                  <div className="collapse navbar-collapse" id="navbarToggler">
+                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+                      <li className="nav-item">
+                        <Link to="/calendario" className="nav-link">Calendario</Link>
+                      </li>
+                      <li className="nav-item">
+                        <Link to="/miviaje" className="nav-link">Mi Viaje</Link>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </nav>
+            </header>
+            <main className="conatiner text-white h-100">
+              <Switch>
+                <Route path="/calendario">
+                  <Calendario />
+                </Route>
+                <Route path="/miviaje">
+                  <Viaje />
+                </Route>
+                <Route path="/" exact={true}>
+                  <Inicio />
+                </Route>
+                <Route path='*' exact={true}>
+                  <p>Esta página no existe</p>
+                </Route>
+              </Switch>
+            </main>
+          </div>
+        </div>
       </Router>
+
     );
   }
 }
@@ -60,9 +76,30 @@ class Inicio extends React.Component {
   }
 
   render() {
+    console.log(algo)
     return (
       <>
         <h2>PlaceAI</h2>
+        <div className="card-group">
+          <div className="card bg-dark mb-3">
+            <img className="card-img-top" src={algo.img.MK} alt="Card image cap" />
+            <div className="card-body">
+              <h5 className="card-title">Magic Kingdom</h5>
+            </div>
+          </div>
+          <div className="card bg-dark mb-3">
+            <img className="card-img-top" src={algo.img.HS} alt="Card image cap" />
+            <div className="card-body">
+              <h5 className="card-title">Hollywood Studios</h5>
+            </div>
+          </div>
+          <div className="card bg-dark mb-3">
+            <img className="card-img-top" src={algo.img.AI} alt="Card image cap" />
+            <div className="card-body">
+              <h5 className="card-title">Islands of Adventure</h5>
+            </div>
+          </div>
+        </div>
         <ul>
           {this.state.response && this.state.response.map((a, b) => {
             return (<li key={a.id}>{a.id}: {a.name}</li>)
@@ -75,7 +112,48 @@ class Inicio extends React.Component {
 }
 
 
-class Inspeccionar extends React.Component {
+class Calendario extends React.Component {
+  constructor() {
+    super();
+    this.state = {};
+  }
+  componentDidMount() {
+  }
+
+  render() {
+    return (
+      <div>
+        <Grafico />
+      </div >
+    );
+  }
+}
+
+class ControlSidebar extends React.Component {
+  render() {
+    return (
+      <div className="h-100 position-fixed">
+        <div className="d-flex flex-column flex-shrink-0 text-white bg-dark h-100" id="sidebar">
+          <Switch>
+            <Route path="/calendario">
+              <SidebarCalendario />
+            </Route>
+          </Switch>
+          </div>
+        </div>
+    )
+  }
+}
+
+class SidebarCalendario extends React.Component {
+  render (){
+    return(
+      <div></div>
+    );
+  }
+}
+
+class Grafico extends React.Component {
   constructor() {
     super();
     this.state = {};
@@ -88,59 +166,23 @@ class Inspeccionar extends React.Component {
       })
   }
   cambioParque = () => {
-    fetch("http://placeai-api.azurewebsites.net/rides?key=ai&park="+document.getElementById("parqueSelec").value)
+    fetch("http://placeai-api.azurewebsites.net/rides?key=ai&park=" + document.getElementById("parqueSelec").value)
       .then(resp => resp.json())
       .then(data => {
         this.setState({ rides: data.response })
       })
   }
-
-  render() {
-    return (
-      <div>
-        <div>
-          <input type="date" id="fechaSelec">
-          </input>
-          <select id="parqueSelec" onChange={this.cambioParque}>
-            <option defaultValue>Seleccione</option>
-            {!this.state.parks ? <option disabled defaultValue>Cargando...</option> : ""}
-            {this.state.parks && this.state.parks.map((a, b) => {
-              return (<option key={a.id} value={a.id}>{a.name}</option>)
-            })}
-          </select>
-          <select id="atracSelec" onChange={Grafico.cambioAtraccion}>
-            <option disabled defaultValue>Seleccione</option>
-            {this.state.rides && this.state.rides.map((a, b) => {
-              return (<option key={a.id} value={a.id}>{a.name}</option>)
-            })}
-        </select>
-        </div>
-        <Tabla />
-        <Grafico />
-      </div >
-    );
-  }
-}
-
-class Grafico extends React.Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
-  componentDidMount(){
-  }
-
-  cambioAtraccion(){
-    fetch("http://placeai-api.azurewebsites.net/waits/"+document.getElementById("atracSelec").value+"?key=ai")
-    .then(resp => resp.json())
+  cambioAtraccion = () => {
+    fetch("http://placeai-api.azurewebsites.net/waits/" + document.getElementById("atracSelec").value + "?key=ai")
+      .then(resp => resp.json())
       .then(data => {
         this.setState({ waits: data.response.intervals })
       })
   }
 
-  cambioFecha (){
-    fetch("http://placeai-api.azurewebsites.net/waits/"+document.getElementById("atracSelec").value+"?key=ai&time="+document.getElementById("fechaSelec").value)
-    .then(resp => resp.json())
+  cambioFecha = () => {
+    fetch("http://placeai-api.azurewebsites.net/waits/" + document.getElementById("atracSelec").value + "?key=ai&time=" + document.getElementById("fechaSelec").value)
+      .then(resp => resp.json())
       .then(data => {
         this.setState({ waits: data.response.intervals })
       })
@@ -183,6 +225,23 @@ class Grafico extends React.Component {
     };
     return (
       <>
+        <div>
+          <input type="date" id="fechaSelec">
+          </input>
+          <select id="parqueSelec" onChange={this.cambioParque}>
+            <option defaultValue>Seleccione</option>
+            {!this.state.parks ? <option disabled defaultValue>Cargando...</option> : ""}
+            {this.state.parks && this.state.parks.map((a, b) => {
+              return (<option key={a.id} value={a.id}>{a.name}</option>)
+            })}
+          </select>
+          <select id="atracSelec" onChange={this.cambioAtraccion}>
+            <option disabled defaultValue>Seleccione</option>
+            {this.state.rides && this.state.rides.map((a, b) => {
+              return (<option key={a.id} value={a.id}>{a.name}</option>)
+            })}
+          </select>
+        </div>
         <div className="container-sm">
           <Line data={data} options={options} />
         </div>
@@ -191,15 +250,32 @@ class Grafico extends React.Component {
   }
 }
 
+class Viaje extends React.Component {
+  constructor() {
+    super();
+    this.state = {};
+  }
+  componentDidMount() {
+  }
+
+  render() {
+    return (
+      <div>
+        <div></div>
+      </div>
+    );
+  }
+}
+
 function Tabla() {
   /*const data = React.useMemo(
     () => [
       {
-        col1: predictions.games.MK[0],
+              col1: predictions.games.MK[0],
         col2: predictions.times.MK[0] + " minutos",
       },
       {
-        col1: "Hollywood Rip Ride Rockit",
+              col1: "Hollywood Rip Ride Rockit",
         col2: "20 minutos",
       },
     ], []
@@ -208,73 +284,73 @@ function Tabla() {
   const columns = React.useMemo(
     () => [
       {
-        Header: "Juegos",
+              Header: "Juegos",
         accessor: "col1",
       },
       {
-        Header: "Tiempos de Espera",
+              Header: "Tiempos de Espera",
         accessor: "col2",
       }
     ], []
   );
 
   const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({ columns, data })
+              getTableProps,
+              getTableBodyProps,
+              headerGroups,
+              rows,
+              prepareRow,
+  } = useTable({columns, data})
 
   return (
     <div className="container-fluid" id="Inspeccionar-Div">
-      <table {...getTableProps()} style={{ border: 'solid 1px white' }}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th
-                  {...column.getHeaderProps()}
-                  style={{
-                    borderBottom: 'solid 3px gray',
-                    background: 'black',
-                    color: 'white',
-                    fontWeight: 'bold',
-                  }}
-                >
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row)
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      style={{
-                        padding: '10px',
-                        border: 'solid 1px gray',
-                        background: 'black',
-                        color: "white",
-                        width: "250px",
-                      }}
-                    >
-                      {cell.render('Cell')}
-                    </td>
-                  )
-                })}
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-    </div>
+              <table {...getTableProps()} style={{ border: 'solid 1px white' }}>
+                <thead>
+                  {headerGroups.map(headerGroup => (
+                    <tr {...headerGroup.getHeaderGroupProps()}>
+                      {headerGroup.headers.map(column => (
+                        <th
+                          {...column.getHeaderProps()}
+                          style={{
+                            borderBottom: 'solid 3px gray',
+                            background: 'black',
+                            color: 'white',
+                            fontWeight: 'bold',
+                          }}
+                        >
+                          {column.render('Header')}
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                  {rows.map(row => {
+                    prepareRow(row)
+                    return (
+                      <tr {...row.getRowProps()}>
+                        {row.cells.map(cell => {
+                          return (
+                            <td
+                              {...cell.getCellProps()}
+                              style={{
+                                padding: '10px',
+                                border: 'solid 1px gray',
+                                background: 'black',
+                                color: "white",
+                                width: "250px",
+                              }}
+                            >
+                              {cell.render('Cell')}
+                            </td>
+                          )
+                        })}
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
   );*/
   return (<div></div>);
 }
