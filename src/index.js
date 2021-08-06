@@ -33,6 +33,9 @@ class App extends React.Component {
                         <Link to="/miviaje" className="nav-link">Mi Viaje</Link>
                       </li>
                     </ul>
+                    <button type="button" className="nav-item d-flex btn btn-dark">
+                      Juan Alcachofa
+                    </button>
                   </div>
                 </div>
               </nav>
@@ -82,20 +85,26 @@ class Inicio extends React.Component {
         <h2>PlaceAI</h2>
         <div className="card-group">
           <div className="card bg-dark mb-3">
-            <img className="card-img-top" src={algo.img.MK} alt="Card image cap" />
-            <div className="card-body">
+            <img class="card-img-top" src="images/Walt-Disney-MAgic-Kingdom-img.jpg" alt="Card image cap" style={{
+              height: 250
+            }}></img>
+            <div className="card-img-overlay">
               <h5 className="card-title">Magic Kingdom</h5>
             </div>
           </div>
           <div className="card bg-dark mb-3">
-            <img className="card-img-top" src={algo.img.HS} alt="Card image cap" />
-            <div className="card-body">
+            <img className="card-img-top" src={algo.img.HS} alt="Card image cap" style={{
+              height: 250
+            }} />
+            <div className="card-img-overlay">
               <h5 className="card-title">Hollywood Studios</h5>
             </div>
           </div>
           <div className="card bg-dark mb-3">
-            <img className="card-img-top" src={algo.img.AI} alt="Card image cap" />
-            <div className="card-body">
+            <img className="card-img-top" src={algo.img.AI} alt="Card image cap" style={{
+              height: 250
+            }} />
+            <div className="card-img-overlay">
               <h5 className="card-title">Islands of Adventure</h5>
             </div>
           </div>
@@ -139,15 +148,15 @@ class ControlSidebar extends React.Component {
               <SidebarCalendario />
             </Route>
           </Switch>
-          </div>
         </div>
+      </div>
     )
   }
 }
 
 class SidebarCalendario extends React.Component {
-  render (){
-    return(
+  render() {
+    return (
       <div></div>
     );
   }
@@ -258,10 +267,16 @@ class Viaje extends React.Component {
   componentDidMount() {
   }
 
+  fechasNoSe(){
+    
+  }
+
   render() {
     return (
       <div>
-        <div></div>
+        <div>
+          <input type="date" id="fechaInicio"></input>
+        </div>
       </div>
     );
   }
