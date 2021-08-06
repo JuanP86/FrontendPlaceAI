@@ -1,21 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
-
-body{
-    background-color:black;
-    font-family: 'Abel';
-}
 main {
-    padding-top: 56px;
+    padding-top: 70px;
     padding-left: 200px;
-}
-
-#sidebar {
-    width: 200px;
-    padding-top: 57px;
-}
-
-#grafico-div {
-    padding-top: 30px;
 }
 
 header {
