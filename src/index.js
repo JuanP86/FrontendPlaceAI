@@ -8,7 +8,8 @@ import {
 } from "react-router-dom";
 //import { useTable, useFilters, useGlobalFilter, useAsyncDebounce } from 'react-table';
 import { Line } from 'react-chartjs-2';
-import algo from './fetcheadisimolince.json';
+import MiViajeCreacion from "./MiViajeCreacion";
+import Inicio from "./Inicio";
 
 class App extends React.Component {
   render() {
@@ -18,7 +19,7 @@ class App extends React.Component {
           <ControlSidebar />
           <div className="h-100 w-100">
             <header>
-              <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+              <nav className="navbar navbar-expand-lg navbar-dark bg-dark ms-4">
                 <div className="container-fluid">
                   <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -46,13 +47,13 @@ class App extends React.Component {
                   <Calendario />
                 </Route>
                 <Route path="/miviaje">
-                  <Viaje />
+                  <MiViajeCreacion />
                 </Route>
                 <Route path="/" exact={true}>
                   <Inicio />
                 </Route>
                 <Route path='*' exact={true}>
-                  <p>Esta página no existe</p>
+                  <h2 className="ms-3">Esta página no existe</h2>
                 </Route>
               </Switch>
             </main>
@@ -63,63 +64,6 @@ class App extends React.Component {
     );
   }
 }
-
-class Inicio extends React.Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
-
-  componentDidMount() {
-    fetch("http://placeai-api.azurewebsites.net/index?key=ai")
-      .then(resp => resp.json())
-      .then(data => {
-        this.setState({ response: data.response })
-      });
-  }
-
-  render() {
-    console.log(algo)
-    return (
-      <>
-        <h2>PlaceAI</h2>
-        <div className="card-group">
-          <div className="card bg-dark mb-3">
-            <img class="card-img-top" src="images/Walt-Disney-MAgic-Kingdom-img.jpg" alt="Card image cap" style={{
-              height: 250
-            }}></img>
-            <div className="card-img-overlay">
-              <h5 className="card-title">Magic Kingdom</h5>
-            </div>
-          </div>
-          <div className="card bg-dark mb-3">
-            <img className="card-img-top" src={algo.img.HS} alt="Card image cap" style={{
-              height: 250
-            }} />
-            <div className="card-img-overlay">
-              <h5 className="card-title">Hollywood Studios</h5>
-            </div>
-          </div>
-          <div className="card bg-dark mb-3">
-            <img className="card-img-top" src={algo.img.AI} alt="Card image cap" style={{
-              height: 250
-            }} />
-            <div className="card-img-overlay">
-              <h5 className="card-title">Islands of Adventure</h5>
-            </div>
-          </div>
-        </div>
-        <ul>
-          {this.state.response && this.state.response.map((a, b) => {
-            return (<li key={a.id}>{a.id}: {a.name}</li>)
-          })}
-          {!this.state.response ? "Cargando..." : ""}
-        </ul>
-      </>
-    )
-  }
-}
-
 
 class Calendario extends React.Component {
   constructor() {
@@ -255,29 +199,6 @@ class Grafico extends React.Component {
           <Line data={data} options={options} />
         </div>
       </>
-    );
-  }
-}
-
-class Viaje extends React.Component {
-  constructor() {
-    super();
-    this.state = {};
-  }
-  componentDidMount() {
-  }
-
-  fechasNoSe(){
-    
-  }
-
-  render() {
-    return (
-      <div>
-        <div>
-          <input type="date" id="fechaInicio"></input>
-        </div>
-      </div>
     );
   }
 }
