@@ -10,6 +10,8 @@ import {
 import { Line } from 'react-chartjs-2';
 import MiViajeCreacion from "./MiViajeCreacion";
 import Inicio from "./Inicio";
+import MiVIajeDiasXPark from "./MiVIajeDiasXPark";
+import MiViajeAdicionales from "./MiViajeAdicionales";
 
 class App extends React.Component {
   render() {
@@ -48,6 +50,12 @@ class App extends React.Component {
                 </Route>
                 <Route path="/miviaje">
                   <MiViajeCreacion />
+                </Route>
+                <Route path="/miviaje_2">
+                  <MiVIajeDiasXPark />
+                </Route>
+                <Route path="/miviaje_3">
+                  <MiViajeAdicionales />
                 </Route>
                 <Route path="/" exact={true}>
                   <Inicio />
