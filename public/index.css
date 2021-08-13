@@ -8,3 +8,11 @@ header {
     z-index: 1000;
     width: 100%;
 }
+
+.offcanvas {
+    transition: transform .15s ease-in-out, visibility .15s ease-in-out;
+}
+
+select {
+    cursor: pointer;
+}

@@ -22,12 +22,12 @@ class App extends React.Component {
                     <NavLink to="/calendario" className="nav-link" activeClassName="active">Calendario</NavLink>
                   </li>
                 </ul>
-                <div class="btn-group">
-                  <button type="button" class="btn btn-primary">Mí perfil</button>
-                  <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
-                    <span class="visually-hidden">Mostrar menú de usuario</span>
+                <div className="btn-group">
+                  <button type="button" className="btn btn-primary">Mí perfil</button>
+                  <button type="button" className="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown">
+                    <span className="visually-hidden">Mostrar menú de usuario</span>
                   </button>
-                  <ul class="dropdown-menu">
+                  <ul className="dropdown-menu">
                     <li>Cerrar sesión</li>
                   </ul>
                 </div>
@@ -35,25 +35,28 @@ class App extends React.Component {
             </div>
           </nav>
         </header>
-        <main className="container text-white h-100">
+        <main className="container text-white">
           <Switch>
-            <Route path="/calendario">
+            <Route path="/calendario/:park?">
               <h2>Calendario</h2>
-              <hr />
-              <Calendario />
+              <hr/>
+              <Calendario/>
             </Route>
             <Route path="/" exact={true}>
               <h2>Inicio</h2>
-              <hr />
+              <hr/>
               <Inicio />
             </Route>
             <Route path='*' exact={true}>
               <h2>Error 404</h2>
-              <hr />
+              <hr/>
               <p>Esta página no existe.</p>
             </Route>
           </Switch>
         </main>
+        <footer className="text-white p-3 shadow-lg bg-secondary bg-gradient fst-italic border-top border-white">
+          <p className="mb-auto">© Copyright 2021. Maximiliano Ostrower, Javier Liu y Juan Pablo Patxot.</p>
+        </footer>
       </Router>
     );
   }
