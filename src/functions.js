@@ -43,3 +43,11 @@ export function Sidebar(props) {
     </>
   )
 }
+
+export function Icon(props) {
+  return (
+    <svg className={(props.className || []).concat(" bi")} width={props.size || 16} height={props.size || 16} fill="currentColor" role="img" aria-label={props.name} alt={props.alt || props.name}>
+      <use xlinkHref={process.env.PUBLIC_URL+"/assets/bootstrap-icons.svg#"+props.name} />
+    </svg>
+  )
+}

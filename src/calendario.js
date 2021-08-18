@@ -19,7 +19,7 @@ export default withRouter(Calendario);
 class Chart extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { current: props.park };
+		this.state = { current: props.park || "mk" };
 	}
 	componentDidMount() {
 		fetch(f.apiLink("index")).then(resp => resp.json())
@@ -29,17 +29,18 @@ class Chart extends React.Component {
 		if (this.state.current) this.listenerPark(true);
 	}
 	listenerPark = (useCurrent = false) => {
-		if (useCurrent !== true) this.setState({ current: f.$("#selectPark").value, rides: null });
-		fetch(f.apiLink("rides", { park: this.state.current })).then(resp => resp.json())
+		let current = useCurrent !== true ? f.$("#selectPark").value : this.state.current;
+		if (useCurrent !== true) this.setState({ current, rides: null });
+		fetch(f.apiLink("rides", { park: current })).then(resp => resp.json())
 			.then(data => {
 				this.setState({ rides: data.response })
 			})
 	}
-	listenerRide = () => {
+	/*listenerRide = () => {
 		fetch(f.apiLink("waits/" + f.$("#selectRide").value)).then(resp => resp.json()).then(data => {
 			this.setState({ waits: data.response.intervals })
 		})
-	}
+	}*/
 
 	listenerDate = () => {
 		fetch(f.apiLink("waits/" + f.$("#selectRide").value, { time: f.$("#selectDate").value })).then(resp => resp.json())
@@ -80,10 +81,9 @@ class Chart extends React.Component {
 			<>
 				<f.Sidebar title="Seleccionar">
 					{!this.state.parks ? <div><div className="spinner-border" />Cargando parques...</div> : ""}
-					<select id="selectPark" onChange={this.listenerPark} className="w-100 border-0 p-3 bg-secondary bg-gradient text-white fw-light">
-						<option defaultValue>Seleccione</option>
+					<select id="selectPark" onChange={this.listenerPark} className="w-100 border-0 p-3 bg-secondary bg-gradient text-white fw-light" value={this.state.current}>
 						{this.state.parks && this.state.parks.map((a, b) => {
-							return (<option key={a.id} value={a.id} defaultValue={a.id === this.state.current} className="p-2">{a.name}</option>)
+							return (<option key={a.id} value={a.id} className="p-2">{a.name}</option>)
 						})}
 					</select>
 					{!this.state.rides ? <div><div className="spinner-border" />Cargando atracciones...</div> : ""}
@@ -93,6 +93,7 @@ class Chart extends React.Component {
 						})}
 					</ul>
 				</f.Sidebar>
+				<p><f.Icon name="heart-fill" className="text-success"/></p>
 				<div>
 					<input type="date" id="selectDate"></input>
 				</div>

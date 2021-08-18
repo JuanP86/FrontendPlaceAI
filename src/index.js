@@ -2,8 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Switch, Route, Link, NavLink } from "react-router-dom";
 
-import Calendario from './calendario.js';
-import Inicio from './inicio.js';
+import Calendario from './calendario';
+import Inicio from './inicio';
+import * as f from "./functions";
 
 class App extends React.Component {
   render() {
@@ -38,12 +39,12 @@ class App extends React.Component {
         <main className="container text-white">
           <Switch>
             <Route path="/calendario/:park?">
-              <h2>Calendario</h2>
+              <h2><f.Icon name="calendar3" className="me-1" size="26"/>Calendario</h2>
               <hr/>
               <Calendario/>
             </Route>
             <Route path="/" exact={true}>
-              <h2>Inicio</h2>
+              <h2><f.Icon name="calendar"/>Inicio</h2>
               <hr/>
               <Inicio />
             </Route>
