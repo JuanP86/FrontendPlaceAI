@@ -5,21 +5,9 @@ import { withRouter } from 'react-router';
 import * as f from "./functions";
 
 class Calendario extends React.Component {
-	render() {
-		return (
-			<>
-				<Chart park={this.props.match.params.park || null} />
-			</>
-		);
-	}
-}
-
-export default withRouter(Calendario);
-
-class Chart extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { current: props.park || "mk" };
+		this.state = { current: this.props.match.params.park || "mk" };
 	}
 	componentDidMount() {
 		fetch(f.apiLink("index")).then(resp => resp.json())
@@ -36,71 +24,57 @@ class Chart extends React.Component {
 				this.setState({ rides: data.response })
 			})
 	}
-	/*listenerRide = () => {
-		fetch(f.apiLink("waits/" + f.$("#selectRide").value)).then(resp => resp.json()).then(data => {
-			this.setState({ waits: data.response.intervals })
-		})
-	}*/
+	listenerRide = (el) => {
+		if (f.$("#selectRide button.active")) f.$("#selectRide button.active").classList.remove("active");
+		el.target.classList.add("active");
+		this.listenerDate();
+	}
 
 	listenerDate = () => {
-		fetch(f.apiLink("waits/" + f.$("#selectRide").value, { time: f.$("#selectDate").value })).then(resp => resp.json())
-			.then(data => {
-				this.setState({ waits: data.response.intervals })
-			})
+		if(!f.$("#selectRide button.active")) return;
+		fetch(f.apiLink("waits/" + f.$("#selectRide button.active").getAttribute("data-value"), { time: f.$("#selectDate").value || null })).then(resp => resp.json()).then(data => {
+			this.setState({ waits: data.response.intervals })
+		})
 	}
 
 	render() {
-		let tiempos = [];
-		for (let i = 0; i < 23; i++) tiempos[i] = Math.floor(Math.random() * (120 - 0)) + 0;
-		let horas = [];
-		for (let i = 0; i < 16; i++) horas[i] = 8 + i;
-		const data = {
-			labels: horas,
-			datasets: [
-				{
-					label: 'tiempos de espera de ese día',
-					data: tiempos,
-					fill: false,
-					backgroundColor: 'rgb(255, 99, 132)',
-					borderColor: 'rgba(255, 99, 132, 0.2)',
-				},
-			],
-		};
-		const options = {
-			scales: {
-				yAxes: [
+		let chart = <f.Alert type="primary">No hay datos para mostrar</f.Alert>;
+		if (this.state.waits) {
+			let entries = Object.entries(this.state.waits);
+			let data = entries.map(x => x[1]);
+			let labels = entries.map(x => x[0]);
+			chart = <Line data={{
+				labels,
+				datasets: [
 					{
-						ticks: {
-							beginAtZero: true,
-						},
+						label: 'Tiempo de espera',
+						data,
+						backgroundColor: 'rgb(13, 202, 240)',
+						borderColor: 'rgb(13, 202, 240)',
 					},
 				],
-			},
-		};
+			}} />;
+		}
 		return (
 			<>
-				<f.Sidebar title="Seleccionar">
-					{!this.state.parks ? <div><div className="spinner-border" />Cargando parques...</div> : ""}
-					<select id="selectPark" onChange={this.listenerPark} className="w-100 border-0 p-3 bg-secondary bg-gradient text-white fw-light" value={this.state.current}>
+				<h3 className="d-inline">{this.state.current ? <span className="badge bg-info">{this.state.current}</span> : ""} {f.$("#selectRide button.active") ? f.$("#selectRide button.active").innerText : "Seleccione una atracción"}</h3>
+				<f.Sidebar title={<f.Icon name="grid"/>} className="float-end" alt="Seleccione">
+					{!this.state.parks ? <div><div className="spinner-border" />Cargando parques...</div> : <select id="selectPark" onChange={this.listenerPark} className="w-100 border-0 p-3 bg-secondary bg-gradient text-white fw-light" value={this.state.current}>
 						{this.state.parks && this.state.parks.map((a, b) => {
 							return (<option key={a.id} value={a.id} className="p-2">{a.name}</option>)
 						})}
-					</select>
-					{!this.state.rides ? <div><div className="spinner-border" />Cargando atracciones...</div> : ""}
-					<ul id="selectRide" className="nav flex-column">
+					</select>}
+					{!this.state.rides ? <div><div className="spinner-border" />Cargando atracciones...</div> : <ul id="selectRide" className="nav flex-column nav-pills">
 						{this.state.rides && this.state.rides.map((a, b) => {
-							return (<li key={a.id} value={a.id} className="m-2">{a.name}</li>)
+							return (<button key={a.id} data-value={a.id} className="nav-link text-white" onClick={this.listenerRide}>{a.name}</button>)
 						})}
-					</ul>
+					</ul>}
 				</f.Sidebar>
-				<p><f.Icon name="heart-fill" className="text-success"/></p>
-				<div>
-					<input type="date" id="selectDate"></input>
-				</div>
-				<div className="container-sm">
-					<Line data={data} options={options} />
-				</div>
+				<input type="date" id="selectDate" className="btn btn-primary float-end me-2" value={new Date().toISOString().split("T")[0]} onChange={this.listenerDate}></input>
+				{chart}
 			</>
 		);
 	}
 }
+
+export default withRouter(Calendario);
