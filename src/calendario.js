@@ -33,7 +33,8 @@ class Calendario extends React.Component {
 	listenerDate = () => {
 		if(!f.$("#selectRide button.active")) return;
 		fetch(f.apiLink("waits/" + f.$("#selectRide button.active").getAttribute("data-value"), { time: f.$("#selectDate").value || null })).then(resp => resp.json()).then(data => {
-			this.setState({ waits: data.response.intervals })
+			if(data.success) this.setState({ waits: data.response.intervals, error: null });
+			else this.setState({ waits: null, error: data.message });
 		})
 	}
 
@@ -41,8 +42,8 @@ class Calendario extends React.Component {
 		let chart = <f.Alert type="primary">No hay datos para mostrar</f.Alert>;
 		if (this.state.waits) {
 			let entries = Object.entries(this.state.waits);
-			let data = entries.map(x => x[1]);
-			let labels = entries.map(x => x[0]);
+			let data = entries.map(x => x[1] >= 0 ? x[1] : 0);
+			let labels = entries.map(x => x[0].split("T")[1].split(":",2).join(":"));
 			chart = <Line data={{
 				labels,
 				datasets: [
@@ -55,10 +56,11 @@ class Calendario extends React.Component {
 				],
 			}} />;
 		}
+		let error = this.state.error ? <f.Alert type="danger">{this.state.error}</f.Alert> : null;
 		return (
 			<>
-				<h3 className="d-inline">{this.state.current ? <span className="badge bg-info">{this.state.current}</span> : ""} {f.$("#selectRide button.active") ? f.$("#selectRide button.active").innerText : "Seleccione una atracción"}</h3>
-				<f.Sidebar title={<f.Icon name="grid"/>} className="float-end" alt="Seleccione">
+				<h3 className="d-inline">{this.state.current ? <span className="badge bg-info">{this.state.current}</span> : ""} {f.$("#selectRide button.active") ? f.$("#selectRide button.active").textContent : "Seleccione una atracción"}</h3>
+				<f.Sidebar name={<f.Icon name="grid"/>} className="float-end" title="Seleccionar atracción">
 					{!this.state.parks ? <div><div className="spinner-border" />Cargando parques...</div> : <select id="selectPark" onChange={this.listenerPark} className="w-100 border-0 p-3 bg-secondary bg-gradient text-white fw-light" value={this.state.current}>
 						{this.state.parks && this.state.parks.map((a, b) => {
 							return (<option key={a.id} value={a.id} className="p-2">{a.name}</option>)
@@ -70,7 +72,8 @@ class Calendario extends React.Component {
 						})}
 					</ul>}
 				</f.Sidebar>
-				<input type="date" id="selectDate" className="btn btn-primary float-end me-2" value={new Date().toISOString().split("T")[0]} onChange={this.listenerDate}></input>
+				<input type="date" id="selectDate" className="btn btn-primary float-end me-2" defaultValue={new Date().toISOString().split("T")[0]} onChange={this.listenerDate} title="Seleccionar fecha"></input>
+        {error}
 				{chart}
 			</>
 		);

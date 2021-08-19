@@ -3,13 +3,13 @@
   "name": "PlaceAI",
   "icons": [
     {
-      "src": "icon.png",
+      "src": "favicon.png",
       "type": "image/png",
       "sizes": "192x192"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#0dcaf0",
+  "background_color": "#0dcaf0"
 }
