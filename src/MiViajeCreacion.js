@@ -14,7 +14,7 @@ class MiViajeCreacion extends React.Component {
 
     submitForm(e) {
         e.preventDefault()
-        this.props.history.push('/miviaje_2');
+        this.props.history.push('/miviaje/2');
     }
 
     render() {
@@ -48,7 +48,7 @@ class MiViajeCreacion extends React.Component {
                         </div>
                         <div>
                             <button type="submit" className="btn btn-success mt-5 ms-3 mb-3"> Siguiente</button>
-                            <Link to="/">
+                            <Link to="/miviaje">
                                 <button type="button" className="btn btn-dark mt-5 ms-3 mb-3"> Atrás</button>
                             </Link>
                         </div>

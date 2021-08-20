@@ -1,9 +1,9 @@
 import React from 'react';
-import algo from './fetcheadisimolince.json';
 import {
     Link
 } from "react-router-dom";
 import { withRouter } from 'react-router-dom';
+import * as f from './functions';
 
 class MiVIajeDiasXPark extends React.Component {
     constructor() {
@@ -11,12 +11,15 @@ class MiVIajeDiasXPark extends React.Component {
         this.state = {};
     }
     componentDidMount() {
-
+        fetch(f.apiLink("index", { extend: "" })).then(resp => resp.json())
+            .then(data => {
+                this.setState({ response: data.response })
+            });
     }
 
     submitForm(e) {
         e.preventDefault()
-        this.props.history.push('/miviaje_3');
+        this.props.history.push('/miviaje/4');
     }
 
     render() {
@@ -29,60 +32,34 @@ class MiVIajeDiasXPark extends React.Component {
                         marginRight: 10
                     }} />
                     <form className="needs-validation" onSubmit={this.submitForm.bind(this)}>
-                        <div className="card-group ms-3 mt-3 me-3">
-                            <div className="row row-cols-1 row-cols-md-3 g-4">
-                                <div className="card bg-dark mb-3">
-                                    <img class="card-img-top" src="images/Walt-Disney-MAgic-Kingdom-img.jpg" alt="Card image cap" style={{
-                                        height: 250
-                                    }}></img>
-                                    <div className="card-img-overlay">
-                                        <h5 className="card-title text-dark">Magic Kingdom</h5>
-                                    </div>
-                                    <div className="card-body">
-                                        <div className="form-floating">
-                                            <input type="number" required min="0" id="DiasMK"></input>
+                        {!this.state.response ? <div><div className="spinner-border" />Cargando parques...</div> : ""}
+                        <div className="row row-cols-3">
+                            {this.state.response && this.state.response.map((a, b) => {
+                                return (
+                                    <div className="col shadow-lg" key={a.id}>
+                                        <div className="card bg-dark mb-3">
+                                            <img className="card-img-top" src={a.image} title={a.name} alt={a.name}></img>
+                                            <div className="card-img-overlay">
+                                                <div className="card-title bg-dark bg-gradient p-1 rounded">
+                                                    <h5 className="opacity-100 text-white mb-0">{a.name}</h5>
+                                                </div>
+                                                <div>
+                                                    <input type="number" min="0"></input>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className="card bg-dark mb-3">
-                                    <img className="card-img-top" src={algo.img.HS} alt="Card image cap" style={{
-                                        height: 250
-                                    }} />
-                                    <div className="card-img-overlay">
-                                        <h5 className="card-title text-dark">Hollywood Studios</h5>
-                                    </div>
-                                    <div class="card-body">
-                                        <div className="form-floating">
-                                        <input type="number" required min="0" id="DiasHS"></input>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="card bg-dark mb-3">
-                                    <img className="card-img-top" src={algo.img.AI} alt="Card image cap" style={{
-                                        height: 250
-                                    }} />
-                                    <div className="card-img-overlay">
-                                        <h5 className="card-title text-dark">Islands of Adventure</h5>
-                                    </div>
-                                    <div class="card-body">
-                                    <div className="form-floating">
-                                        <input type="number" required min="0" id="DiasAI"></input>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                                );
+                            })}
                         </div>
-                        <div>
-                            <button type="submit" className="btn btn-success mt-5 ms-3 mb-3"> Siguiente</button>
-                            <Link to="/miviaje">
-                                <button type="button" className="btn btn-dark mt-5 ms-3 mb-3"> Atrás</button>
-                            </Link>
-                        </div>
+                        <button type="submit" className="btn btn-success mt-5 ms-3 mb-3"> Siguiente</button>
+                        <Link to="/miviaje/1">
+                            <button type="button" className="btn btn-dark mt-5 ms-3 mb-3"> Atrás</button>
+                        </Link>
                     </form>
                 </div>
             </div>
         );
     }
 }
-
 export default withRouter(MiVIajeDiasXPark);

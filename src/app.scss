@@ -1,0 +1,32 @@
+@import "bootstrap";
+
+main {
+    padding-top: 70px;
+    padding-left: 200px;
+}
+
+header {
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+}
+
+.offcanvas {
+    transition: transform .15s ease-in-out, visibility .15s ease-in-out;
+}
+
+select {
+    cursor: pointer;
+}
+
+.bi {
+    text-transform: none;
+    line-height: 1;
+    vertical-align: -.125em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
