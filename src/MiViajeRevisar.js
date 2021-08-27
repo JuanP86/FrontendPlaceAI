@@ -30,7 +30,7 @@ class MiViajeRevisar extends React.Component {
                     <Link to="">
                     <button type="submit" className="btn btn-success mt-5 ms-3 mb-3"> Siguiente</button>
                     </Link>
-                    <Link to="/miviaje/2">
+                    <Link to="/miviaje/3">
                         <button type="button" className="btn btn-dark mt-5 ms-3 mb-3"> Atrás</button>
                     </Link>
                 </div>

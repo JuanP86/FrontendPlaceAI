@@ -19,7 +19,7 @@ class MiVIajeDiasXPark extends React.Component {
 
     submitForm(e) {
         e.preventDefault()
-        this.props.history.push('/miviaje/4');
+        this.props.history.push('/miviaje/3');
     }
 
     render() {

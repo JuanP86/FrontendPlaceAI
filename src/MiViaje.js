@@ -20,6 +20,7 @@ class MiViaje extends React.Component {
                     <ul className="nav flex-column nav-pills">
                         <NavLink to="/miviaje/1"><li className="nav-link text-white">Creación</li></NavLink>
                         <NavLink to="/miviaje/2"><li className="nav-link text-white">Días por parque</li></NavLink>
+                        <NavLink to="/miviaje/3"><li className="nav-link text-white">Adicionales</li></NavLink>
                         <NavLink to="/miviaje/4"><li className="nav-link text-white">Revisar</li></NavLink>
                     </ul>
                 </f.Sidebar>
@@ -39,5 +40,5 @@ class MiViaje extends React.Component {
         );
     }
 }
-//<NavLink to="/miviaje/3"><button className="nav-link text-white">Adicionales</button></NavLink>
+//
 export default withRouter(MiViaje);

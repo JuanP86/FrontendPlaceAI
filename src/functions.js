@@ -31,7 +31,7 @@ export function Sidebar(props) {
   let id = "appSidebar" + (props.id || "Default");
   return (
     <>
-      <button className={"btn btn-primary "+(props.className || "")} type="button" data-bs-toggle="offcanvas" data-bs-target={"#" + id} title={props.title}>{name}</button>
+      <button className={"btn btn-primary " + (props.className || "")} type="button" data-bs-toggle="offcanvas" data-bs-target={"#" + id} title={props.title}>{name}</button>
       <div className="offcanvas offcanvas-start bg-dark" tabIndex="-1" id={id}>
         <div className="offcanvas-header">
           <h5 className="offcanvas-title" id="offcanvasExampleLabel">{name} {props.title}</h5>
@@ -61,27 +61,26 @@ export function Icon(props) {
 }
 
 export function Modal(props) {
-  let name = props.name || "Modal";
+  let name = props.name || "Opciones";
   let id = "modal" + (props.id || "Default");
   return (
     <>
-    <div className="modal fade modalAdicionales" id="modalEntrada" tabindex="-1" aria-labelledby="modalEntradaLabel" aria-hidden="true">
-            <div className="modal-dialog modal-dialog-centered">
-              <div className="modal-content bg-dark">
-                <div className="modal-header">
-                  <h5 className="modal-title" id="emodalEntradaLabel">Titulo</h5>
-                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div className="modal-body">
-                  Cuerpo
-                            </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" className="btn btn-primary">Save changes</button>
-                </div>
-              </div>
+      <button className={"btn btn-info " + (props.className || "")} type="button" data-bs-toggle="modal" data-bs-target={"#" + id}>{name}</button>
+      <div className="modal fade modalAdicionales" id={id} tabindex="-1" aria-labelledby="modalEntradaLabel" aria-hidden="true">
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content bg-dark">
+            <div className="modal-header">
+              <h5 className="modal-title" id="modalEntradaLabel">{name}</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body ms-3">{props.children}</div>
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="button" className="btn btn-primary">Guardar Cambios</button>
             </div>
           </div>
+        </div>
+      </div>
     </>
   )
 }
