@@ -66,17 +66,17 @@ export function Modal(props) {
   return (
     <>
       <button className={"btn btn-info " + (props.className || "")} type="button" data-bs-toggle="modal" data-bs-target={"#" + id}>{name}</button>
-      <div className="modal fade modalAdicionales" id={id} tabindex="-1" aria-labelledby="modalEntradaLabel" aria-hidden="true">
+      <div className="modal fade" id={id} tabIndex="-1" aria-hidden="true">
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content bg-dark">
             <div className="modal-header">
-              <h5 className="modal-title" id="modalEntradaLabel">{name}</h5>
+              <h5 className="modal-title">{name}</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body ms-3">{props.children}</div>
             <div className="modal-footer">
               <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="button" className="btn btn-primary">Guardar Cambios</button>
+              <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={props.handleClick} >Guardar Cambios</button>
             </div>
           </div>
         </div>
