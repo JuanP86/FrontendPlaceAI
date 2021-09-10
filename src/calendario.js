@@ -14,7 +14,7 @@ class Calendario extends React.Component {
 	componentDidMount() {
 		fetch(f.apiLink("parks")).then(resp => resp.json())
 			.then(data => {
-				this.setState({ parks: data.response })
+				this.setState({ parks: data.response.parks })
 			});
 		if (this.state.current) this.listenerPark(true);
 		for (let el of f.$$('[title]')) new Tooltip(el);
@@ -36,7 +36,7 @@ class Calendario extends React.Component {
 	listenerDate = () => {
 		if(!f.$("#selectRide button.active")) return;
 		fetch(f.apiLink("waits/" + f.$("#selectRide button.active").getAttribute("data-value"), { date: f.$("#selectDate").value || null })).then(resp => resp.json()).then(data => {
-			if(data.success) this.setState({ waits: data.response.intervals, error: null });
+			if(data.success) this.setState({ waits: data.response.waits, error: null });
 			else this.setState({ waits: null, error: data.message });
 		})
 	}
@@ -44,9 +44,8 @@ class Calendario extends React.Component {
 	render() {
 		let chart = <f.Alert type="primary">No hay datos para mostrar</f.Alert>;
 		if (this.state.waits) {
-			let entries = Object.entries(this.state.waits);
-			let data = entries.map(x => x[1] >= 0 ? x[1] : 0);
-			let labels = entries.map(x => x[0].split("T")[1].split(":",2).join(":"));
+			let data = this.state.waits.map(x=> x.wait >= 0 ? x.wait : 0);
+			let labels = this.state.waits.map(x => x.time.split("T")[1].split(":",2).join(":"));
 			chart = <Line data={{
 				labels,
 				datasets: [

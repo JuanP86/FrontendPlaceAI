@@ -24,7 +24,7 @@ export default class Inicio extends React.Component {
 			<>
 				{!this.state.response ? <div><div className="spinner-border" />Cargando parques...</div> : ""}
 				<div className="row row-cols-3">
-					{this.state.response && this.state.response.map((a, b) => {
+					{this.state.response && this.state.response.parks.map((a, b) => {
 						return (
 						<div className="col shadow-lg" key={a.id}>
 							<Link className="card bg-dark mb-3" to={"/calendario/"+a.id}>
