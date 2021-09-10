@@ -18,6 +18,10 @@ class Calendario extends React.Component {
 			});
 		if (this.state.current) this.listenerPark(true);
 		for (let el of f.$$('[title]')) new Tooltip(el);
+		fetch(f.apiLink("meta"), {park: "mk"}).then(resp => resp.json())
+			.then(data => {
+				this.setState({ meta: data.response})
+			});
 	}
 	listenerPark = (useCurrent = false) => {
 		let current = useCurrent !== true ? f.$("#selectPark").value : this.state.current;
@@ -36,29 +40,44 @@ class Calendario extends React.Component {
 	listenerDate = () => {
 		if(!f.$("#selectRide button.active")) return;
 		fetch(f.apiLink("waits/" + f.$("#selectRide button.active").getAttribute("data-value"), { date: f.$("#selectDate").value || null })).then(resp => resp.json()).then(data => {
-			if(data.success) this.setState({ waits: data.response.waits, error: null });
-			else this.setState({ waits: null, error: data.message });
+			if(data.success) {
+				data.response.waits.shift();
+				this.setState({ waits: data.response.waits, error: null });
+			} else this.setState({ waits: null, error: data.message });
 		})
 	}
 
 	render() {
-		let chart = <f.Alert type="primary">No hay datos para mostrar</f.Alert>;
+		//let chart = <f.Alert type="primary">No hay datos para mostrar</f.Alert>;
+		let meta = this.state.meta.map(x => x[f.$("#selectDate").value].times[this.state.current]);
+		let chart = <div></div>;
 		if (this.state.waits) {
-			let data = this.state.waits.map(x=> x.wait >= 0 ? x.wait : 0);
-			let labels = this.state.waits.map(x => x.time.split("T")[1].split(":",2).join(":"));
+			let labels = this.state.waits.map(x => new Date(x.time).toLocaleTimeString([], {
+				timeZone: this.state.parks.filter(x => x.id === this.state.current)[0].timezone,
+				timeStyle: "short"
+			}));
+			let waits = this.state.waits.map(x => x.wait >= 0 ? x.wait : null);
+			let waitsInvalid = this.state.waits.map(x => x.wait < 0 ? -1 : null);
 			chart = <Line data={{
 				labels,
 				datasets: [
 					{
-						label: 'Tiempo de espera',
-						data,
+						label: 'Minutos de espera',
+						data: waits,
 						backgroundColor: 'rgb(13, 202, 240)',
 						borderColor: 'rgb(13, 202, 240)',
+					},
+					{
+						label: 'Horarios Cerrado',
+						data: waitsInvalid,
+						backgroundColor: 'rgb(255, 0, 0)',
+						borderColor: 'rgb(255, 0, 0)',
 					},
 				],
 			}} />;
 		}
 		let error = this.state.error ? <f.Alert type="danger">{this.state.error}</f.Alert> : null;
+		//let default = this.state;
 		return (
 			<>
 				<h3 className="d-inline">{this.state.current ? <span className="badge bg-info">{this.state.current}</span> : ""} {f.$("#selectRide button.active") ? f.$("#selectRide button.active").textContent : "Seleccione una atracción"}</h3>
