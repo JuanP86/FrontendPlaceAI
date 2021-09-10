@@ -11,7 +11,7 @@ class MiVIajeDiasXPark extends React.Component {
         this.state = {};
     }
     componentDidMount() {
-        fetch(f.apiLink("index", { extend: "" })).then(resp => resp.json())
+        fetch(f.apiLink("parks")).then(resp => resp.json())
             .then(data => {
                 this.setState({ response: data.response })
             });

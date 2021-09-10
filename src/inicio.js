@@ -13,7 +13,7 @@ export default class Inicio extends React.Component {
 
 	componentDidMount() {
 		for (let el of f.$$('[title]')) new Tooltip(el);
-		fetch(f.apiLink("index", {extend: ""})).then(resp => resp.json())
+		fetch(f.apiLink("parks")).then(resp => resp.json())
 			.then(data => {
 				this.setState({ response: data.response })
 			});

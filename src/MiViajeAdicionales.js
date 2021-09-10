@@ -43,9 +43,9 @@ class MiViajeAdicionales extends React.Component {
                 <input type="time" id="inputModalEntrada"/>
               </div>
             </f.Modal>
-            <f.Modal className="text-light text-nowrap col ms-3" id="modalSalida" name="Horario de Salida">
+            <f.Modal className="text-light text-nowrap col ms-3" id="modalSalida" name="Horario de Salida" handleClick={this.handleOnChange.bind(this,"#inputModalSalida", "horarioSalida")} >
               <div>
-                <input type="time" />
+                <input type="time" id="inputModalSalida"/>
               </div>
             </f.Modal>
             <f.Modal className="text-light text-nowrap col ms-3" id="modalAtraccionesNo" name="Atracciones Prohibidas">
@@ -68,10 +68,10 @@ class MiViajeAdicionales extends React.Component {
           <div className="ms-3">
             <ul id="listaRestricciones">
               {this.state.restrictions.map((a, b) => {
-                return(<li key={a.inputType+a.inputValue}>{a.inputValue}</li>)
+                return(<li key={a.inputType+a.inputValue}>{a.inputType} : {a.inputValue}</li>)
               })}
             </ul>
-            {!this.state.restrictions ? <p id="sinRestricciones">No tiene restricciones para su viaje</p> : <div></div>}
+            {!this.state.restrictions ? <p>No tiene restricciones para su viaje</p> : <div></div>}
           </div>
         <div className="mt-3">
           <button type="submit" className="btn btn-success mt-5 ms-3 mb-3"> Siguiente</button>

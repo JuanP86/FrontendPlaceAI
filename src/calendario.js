@@ -12,7 +12,7 @@ class Calendario extends React.Component {
 		this.state = { current: this.props.match.params.park || "mk" };
 	}
 	componentDidMount() {
-		fetch(f.apiLink("index")).then(resp => resp.json())
+		fetch(f.apiLink("parks")).then(resp => resp.json())
 			.then(data => {
 				this.setState({ parks: data.response })
 			});
@@ -35,7 +35,7 @@ class Calendario extends React.Component {
 
 	listenerDate = () => {
 		if(!f.$("#selectRide button.active")) return;
-		fetch(f.apiLink("waits/" + f.$("#selectRide button.active").getAttribute("data-value"), { time: f.$("#selectDate").value || null })).then(resp => resp.json()).then(data => {
+		fetch(f.apiLink("waits/" + f.$("#selectRide button.active").getAttribute("data-value"), { date: f.$("#selectDate").value || null })).then(resp => resp.json()).then(data => {
 			if(data.success) this.setState({ waits: data.response.intervals, error: null });
 			else this.setState({ waits: null, error: data.message });
 		})
